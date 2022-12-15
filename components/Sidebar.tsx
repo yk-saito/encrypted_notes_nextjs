@@ -7,7 +7,7 @@ const Sidebar = () => {
         <a href="/">Encrypted Notes</a>
       </div>
       <nav className="mit-10">
-        <a href="/" className={category}>
+        <a href="/newNote" className={category}>
           <span>New Note</span>
         </a>
         <a href="/notes" className={category}>
