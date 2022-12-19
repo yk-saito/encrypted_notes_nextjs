@@ -1,3 +1,8 @@
+// type Props = {
+//   onClick: () => void;
+//   children: ReactNode;
+// }
+
 const Button = ({
   children,
   onClick,

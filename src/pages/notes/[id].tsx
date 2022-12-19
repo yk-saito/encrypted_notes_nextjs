@@ -1,18 +1,20 @@
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType, NextPage } from "next";
 import { Note } from '../../types/data'
 import { ParsedUrlQuery } from 'node:querystring'
 import Layout from '../../components/Layout'
 import TextInput from '../../components/TextInput'
 import Button from "../../components/Button";
 
-interface NoteProps {
-  note: Note
-}
+// interface NoteProps {
+//   note: Note
+// }
 
 // Paramsの型を定義し、ParsedUrlQueryをexntendsする
 interface NoteParams extends ParsedUrlQuery {
   id: string
 }
+
+type NoteProps = InferGetStaticPropsType<typeof getStaticProps>
 
 const notes: Note[] = [
   {
@@ -33,8 +35,11 @@ const notes: Note[] = [
   },
 ]
 
-function getNote(id: number): Note | undefined {
+function getNote(id: number): Note {
   const note = notes.find(e => e.id === id)
+  if (note === undefined) {
+    throw new Error("not found")
+  }
   return note
 }
 
@@ -42,7 +47,7 @@ export const handleSaveNote = () => {
   alert("Push SAVE")
 }
 
-const Note: NextPage<NoteProps> = (props) => {
+const NotePage: NextPage<NoteProps> = (props) => {
   const { note } = props
   return (
     <Layout>
@@ -79,24 +84,21 @@ export const getStaticPaths: GetStaticPaths<NoteParams> = async () => {
   }
 }
 
-// パラメータの型を定義
-interface NoteParams extends ParsedUrlQuery {
-  id: string
-}
-
-export const getStaticProps: GetStaticProps<NoteProps, NoteParams> = async ({
-  params
-}) => {
+export const getStaticProps = async (context: GetStaticPropsContext) => {
+  const { params } = context
   // ノートに必要なデータを取得する
   console.log(`params: ${params!.id}`);
-  const note = getNote(Number(params!.id))
-  console.log(`note: ${note}`);
-
-  return {
-    props: {
-      note,
+  try {
+    const note = getNote(Number(params!.id))
+    console.log(`note: ${note}`);
+    return {
+      props: {
+        note,
+      }
     }
+  } catch (err) {
+    console.log(err)
   }
 }
 
-export default Note
+export default NotePage

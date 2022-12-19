@@ -1,4 +1,4 @@
-import { GetStaticProps, NextPage, InferGetStaticPropsType } from 'next'
+import { NextPage, InferGetStaticPropsType } from 'next'
 import { Device } from '../types/data'
 import Layout from '../components/Layout'
 import Button from '../components/Button'
