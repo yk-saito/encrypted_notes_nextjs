@@ -3,9 +3,13 @@ import Link from 'next/link'
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Note } from '../types/data'
 
+// InferGetStaticPropsType<typeof getStaticProps>
+// getStaticProps()の返り値をもとにNotesに渡される型を類推してくれる
 type NotesProps = InferGetStaticPropsType<typeof getStaticProps>
 
-const Notes: NextPage<NotesProps> = ({ notes }: NotesProps) => {
+// NotesはgetStaticPropsが返したpropsを受け取ることができる
+const Notes: NextPage<NotesProps> = (props) => {
+  const { notes } = props
   return (
     <Layout>
       <span>Your Notes</span>
@@ -34,7 +38,8 @@ const Notes: NextPage<NotesProps> = ({ notes }: NotesProps) => {
   )
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+// getStaticPropsはビルド時に実行される
+export const getStaticProps = async () => {
   const notes: Note[] = [
     {
       id: 1,
